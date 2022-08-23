@@ -17,11 +17,11 @@ func init() {
 		fmt.Print(e)
 	}
 
-	username := os.Getenv("db_user")
-	password := os.Getenv("db_pass")
-	dbName := os.Getenv("db_name")
-	dbHost := os.Getenv("db_host")
-	dbPort := os.Getenv("db_port")
+	username := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
 
 	dbUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 		dbHost, dbPort, username, dbName, password) //Создать строку подключения
@@ -33,7 +33,7 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate(&Account{}, &Contact{}, &Category{}, Theme{}, Question{}, Answer{}) //Миграция базы данных
+	db.Debug().AutoMigrate(&Account{}, &Contact{}, &Category{}, &Theme{}, &Question{}, &Answer{}, &UserAttempt{}) //Миграция базы данных
 }
 
 // GetDB возвращает дескриптор объекта DB
