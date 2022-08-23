@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"it_quiz/models"
 	u "it_quiz/utils"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -42,6 +43,16 @@ func GetCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := models.GetCategory(uint(id))
+	resp := u.Message(true, "success")
+	resp["data"] = data
+	u.Respond(w, resp)
+}
+
+func GetCategoryByNameValue(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	topic := params["title"]
+
+	data := models.GetCategoryByName(topic)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
@@ -116,6 +127,21 @@ func GetQuestion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := models.GetQuestion(uint(id))
+	resp := u.Message(true, "success")
+	resp["data"] = data
+	u.Respond(w, resp)
+}
+
+func GetAllQuestionsByThemeId(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	themeId, err := strconv.Atoi(params["theme_id"])
+	if err != nil {
+		//Переданный параметр пути не является целым числом
+		u.Respond(w, u.Message(false, "There was an error in your request"))
+		return
+	}
+
+	data := models.GetAllQuestionsByThemeId(uint(themeId))
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
@@ -198,6 +224,43 @@ func GetRightAnswersByTheme(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := models.GetRightAnswersByThemeId(uint(themeId))
+	resp := u.Message(true, "success")
+	resp["data"] = data
+	u.Respond(w, resp)
+}
+
+func CreateUserAttempt(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user").(uint)
+
+	userAttempt := &models.UserAttempt{}
+	err := json.NewDecoder(r.Body).Decode(userAttempt)
+	if err != nil {
+		u.Respond(w, u.Message(false, "Error while decoding request body"))
+		return
+	}
+
+	userAttempt.UserId = user
+	resp := userAttempt.CreateAttempt()
+	u.Respond(w, resp)
+}
+
+func GetAllAttempts(w http.ResponseWriter, r *http.Request) {
+	data := models.GetAllAttempts()
+	resp := u.Message(true, "success")
+	resp["data"] = data
+	u.Respond(w, resp)
+}
+
+func GetUserAttempt(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id, err := strconv.Atoi(params["id"])
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	data := models.GetUserAttempt(uint(id))
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)

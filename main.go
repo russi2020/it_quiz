@@ -29,6 +29,7 @@ func main() {
 	router.HandleFunc("/api/it_quiz/categories", controllers.CreateCategory).Methods("POST")
 	router.HandleFunc("/api/it_quiz/categories", controllers.GetCategories).Methods("GET")
 	router.HandleFunc("/api/it_quiz/categories/{id}", controllers.GetCategory).Methods("GET")
+	router.HandleFunc("/api/it_quiz/categories/title/{title}", controllers.GetCategoryByNameValue).Methods("GET")
 
 	//Theme routes
 	router.HandleFunc("/api/it_quiz/themes", controllers.CreateTheme).Methods("POST")
@@ -42,11 +43,17 @@ func main() {
 	router.HandleFunc("/api/it_quiz/questions/{id}", controllers.GetQuestion).Methods("GET")
 	router.HandleFunc("/api/it_quiz/questions/answers/{question_id}", controllers.GetAnswersByQuestion).Methods("GET")
 	router.HandleFunc("/api/it_quiz/questions/answers/right/{question_id}", controllers.GetRightAnswerByQuestion).Methods("GET")
+	router.HandleFunc("/api/it_quiz/questions/theme/{theme_id}", controllers.GetAllQuestionsByThemeId).Methods("GET")
 
 	//Answer routes
 	router.HandleFunc("/api/it_quiz/answers", controllers.CreateAnswer).Methods("POST")
 	router.HandleFunc("/api/it_quiz/answers", controllers.GetAnswers).Methods("GET")
 	router.HandleFunc("/api/it_quiz/answers/{id}", controllers.GetAnswer).Methods("GET")
+
+	// UserAttempt routes
+	router.HandleFunc("/api/it_quiz/user_attempts", controllers.CreateUserAttempt).Methods("POST")
+	router.HandleFunc("/api/it_quiz/user_attempts", controllers.GetAllAttempts).Methods("GET")
+	router.HandleFunc("/api/it_quiz/user_attempts/{id}", controllers.GetUserAttempt).Methods("GET")
 
 	router.Use(app.JwtAuthentication) // добавляем middleware проверки JWT-токена
 

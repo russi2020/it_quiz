@@ -100,7 +100,7 @@ func (c *Category) CreateCategoryRecord() map[string]interface{} {
 func GetCategoryByName(topic string) map[string]interface{} {
 
 	category := Category{}
-	err := GetDB().Table("categories").Where("topic = ?", topic).First(category).Error
+	err := GetDB().Table("categories").Where("topic = ?", topic).First(&category).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -298,7 +298,7 @@ func (userAtt *UserAttempt) CreateAttempt() map[string]interface{} {
 
 func GetAllAttempts() []*UserAttempt {
 	userAttempts := make([]*UserAttempt, 0)
-	err := GetDB().Table("user_attempt").Find(&userAttempts).Error
+	err := GetDB().Table("user_attempts").Find(&userAttempts).Error
 	if err != nil {
 		log.Println(err)
 		return nil
@@ -309,7 +309,7 @@ func GetAllAttempts() []*UserAttempt {
 
 func GetUserAttempt(id uint) *UserAttempt {
 	userAttempt := &UserAttempt{}
-	err := GetDB().Table("user_attempt").Where("id = ?", id).First(&userAttempt).Error
+	err := GetDB().Table("user_attempts").Where("id = ?", id).First(&userAttempt).Error
 	if err != nil {
 		log.Println(err)
 		return nil
